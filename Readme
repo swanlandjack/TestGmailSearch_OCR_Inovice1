@@ -1,0 +1,44 @@
+## ⚠️ Disclaimer
+
+### Educational Purpose
+This project is developed for **educational purposes only** as part of the HKUST MBA course on AI and Web Technologies. It is intended to demonstrate the integration of AI APIs, email processing, and web applications for teaching students about modern business automation tools.
+
+### Security & Data Privacy
+- **API Keys:** Users are responsible for securing their own Gemini API keys and Gmail credentials. Never share these credentials or commit them to version control.
+- **Data Handling:** This application processes invoice data and email content. Users must ensure compliance with their organization's data privacy policies and applicable regulations (GDPR, CCPA, etc.).
+- **Email Access:** This tool requires access to your Gmail account via app passwords. Use at your own risk and only with accounts you control.
+
+### No Warranty
+This software is provided "AS IS" without warranty of any kind, express or implied. The author and HKUST make no guarantees regarding:
+- Accuracy of AI-extracted invoice data
+- Reliability of automated processing
+- Security of data transmission or storage
+- Fitness for production or commercial use
+
+### Production Use Warning
+This is a **demonstration/learning tool**. Before using in production:
+- Implement proper authentication and authorization
+- Add comprehensive error handling and logging
+- Ensure compliance with financial data regulations
+- Conduct security audits
+- Add data encryption for sensitive information
+- Implement proper database storage (currently uses in-memory storage)
+
+### Liability
+Users assume all responsibility and liability for:
+- Any financial decisions based on processed invoice data
+- Data breaches or unauthorized access resulting from improper credential management
+- Compliance with local laws and regulations regarding automated email processing
+- Any costs incurred from API usage (Gemini API, hosting, etc.)
+
+### Academic Integrity
+Students using this code for coursework must:
+- Properly cite and attribute this repository
+- Comply with their institution's academic integrity policies
+- Use it as a learning reference, not for direct submission
+
+---
+
+**By using this software, you acknowledge that you have read and understood this disclaimer and agree to use the software at your own risk.**
+
+Last Updated: December 2025
