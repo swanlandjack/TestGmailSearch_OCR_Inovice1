@@ -30,14 +30,8 @@ CHECK_RECENT_DAYS = int(os.getenv("CHECK_RECENT_DAYS", "7"))  # Only check email
 MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_PDF_MB = float(os.getenv("MAX_PDF_MB", "15"))
 
-if not GEMINI_API_KEY:
-    raise RuntimeError("Missing GEMINI_API_KEY")
-if not GMAIL_USER:
-    raise RuntimeError("Missing GMAIL_USER")
-if not GMAIL_APP_PASSWORD:
-    raise RuntimeError("Missing GMAIL_APP_PASSWORD")
-
-client = genai.Client(api_key=GEMINI_API_KEY)
+# Initialize Gemini client only if API key is provided (optional for manual interface usage)
+client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 app = Flask(__name__)
 
 # ----------------------------
@@ -484,7 +478,17 @@ def check_gmail_inbox(trigger_source: str = "scheduled", user_email=None, user_p
 def scheduled_checker_loop():
     """
     Background thread that checks Gmail at the scheduled time each day.
+    Only runs if server has configured credentials (GMAIL_USER, GMAIL_APP_PASSWORD, GEMINI_API_KEY).
     """
+    # Check if server has configured credentials
+    if not all([GMAIL_USER, GMAIL_APP_PASSWORD, GEMINI_API_KEY]):
+        print(f"\n{'='*80}")
+        print(f"Scheduled Gmail Monitor: DISABLED")
+        print(f"  Reason: Missing server environment variables")
+        print(f"  Students can still use the manual web interface")
+        print(f"{'='*80}\n")
+        return
+    
     print(f"\n{'='*80}")
     print(f"Scheduled Gmail Monitor Started")
     print(f"  Email: {GMAIL_USER}")
@@ -544,15 +548,18 @@ def health():
     
     last_check = check_history[-1] if check_history else None
     
+    # Check if scheduled monitoring is enabled
+    monitoring_enabled = all([GMAIL_USER, GMAIL_APP_PASSWORD, GEMINI_API_KEY])
+    
     return jsonify({
         "ok": True,
         "model": MODEL_NAME,
         "gmail_monitoring": {
-            "enabled": True,
-            "email": GMAIL_USER,
+            "enabled": monitoring_enabled,
+            "email": GMAIL_USER if monitoring_enabled else "Not configured (use web interface)",
             "daily_check_time": DAILY_CHECK_TIME,
             "check_recent_days": CHECK_RECENT_DAYS,
-            "next_scheduled_check": scheduled_time.isoformat(),
+            "next_scheduled_check": scheduled_time.isoformat() if monitoring_enabled else None,
             "last_check": last_check["checked_at"] if last_check else None,
             "last_check_found": last_check["invoices_found"] if last_check else 0,
         },
